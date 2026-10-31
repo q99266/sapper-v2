@@ -75,7 +75,7 @@ RUN npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claud
 # --- python extras ----------------------------------------------------------
 RUN pip3 install --no-cache-dir --break-system-packages \
         requests pyjwt "unicorn==2.0.1.post1" pwntools \
-        pycryptodome sympy ROPgadget ropper
+        pycryptodome sympy ROPgadget ropper ddddocr
 # heavy/compiled extras: failure here must not kill the build (kb mentions them
 # as optional; stdlib+sympy covers most crypto)
 RUN pip3 install --no-cache-dir --break-system-packages gmpy2 z3-solver \
