@@ -29,7 +29,7 @@ RUN echo 'deb http://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main contrib
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates curl wget git jq unzip zip file xxd less vim \
         procps psmisc lsof tcpdump iproute2 iputils-ping net-tools \
-        python3 python3-pip \
+        python3 python3-pip build-essential python3-dev \
         nodejs npm \
         netcat-traditional socat \
         dnsutils whois \
@@ -75,7 +75,8 @@ RUN npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claud
 # --- python extras ----------------------------------------------------------
 RUN pip3 install --no-cache-dir --break-system-packages \
         requests pyjwt "unicorn==2.0.1.post1" pwntools \
-        pycryptodome sympy ROPgadget ropper ddddocr
+        pycryptodome sympy ROPgadget ropper ddddocr \
+    || echo "WARN: some python packages unavailable — continuing without them"
 # heavy/compiled extras: failure here must not kill the build (kb mentions them
 # as optional; stdlib+sympy covers most crypto)
 RUN pip3 install --no-cache-dir --break-system-packages gmpy2 z3-solver \
