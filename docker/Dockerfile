@@ -34,6 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         netcat-traditional socat \
         dnsutils whois \
         openssl \
+        tesseract-ocr tesseract-ocr-chi-sim \
         nmap masscan \
         whatweb wafw00f nikto \
         gobuster ffuf dirb wfuzz \
@@ -76,6 +77,7 @@ RUN npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claud
 RUN pip3 install --no-cache-dir --break-system-packages \
         requests pyjwt "unicorn==2.0.1.post1" pwntools \
         pycryptodome sympy ROPgadget ropper ddddocr \
+        gmssl opencv-python-headless pytesseract Pillow \
     || echo "WARN: some python packages unavailable — continuing without them"
 # heavy/compiled extras: failure here must not kill the build (kb mentions them
 # as optional; stdlib+sympy covers most crypto)
