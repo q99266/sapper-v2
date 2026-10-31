@@ -41,8 +41,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            q99266/sapper-agent:${{ steps.vars.outputs.tag }}
-            q99266/sapper-agent:latest
+            johnny1314/sapper-agent:${{ steps.vars.outputs.tag }}
+            johnny1314/sapper-agent:latest
           labels: |
             org.opencontainers.image.source=https://github.com/q99266/sapper-v2
             org.opencontainers.image.version=${{ steps.vars.outputs.tag }}
