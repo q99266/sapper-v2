@@ -732,3 +732,35 @@ class KeyRotationTests(unittest.TestCase):
             "ANTHROPIC_AUTH_TOKEN": "t1"}):
             self.assertTrue(sapper._rotate_key())
             self.assertEqual(os.environ["ANTHROPIC_AUTH_TOKEN"], "t1")
+
+
+class HookExecutionTests(unittest.TestCase):
+    """Regression for #2: the hook script itself must run and emit valid JSON.
+
+    SettingsPatchTests only asserted the command string was written; the hook
+    binary was never executed (its fg->sapper rename import bug shipped silently
+    because Claude Code swallows hook stderr).
+    """
+
+    def _run_hook(self, event, cwd, stdin=None):
+        import subprocess
+        proc = subprocess.run(
+            [sys.executable, str(ROOT / "lib" / "sapper-hook.py"), event],
+            capture_output=True, text=True, timeout=30,
+            cwd=cwd, input=stdin,
+        )
+        return proc
+
+    def test_sessionstart_and_userpromptsubmit_execute_and_emit_json(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            store = sapper.Store(Path(tmp) / ".sapper")
+            store.init("hooktest", "verify hook executes")
+            for event, stdin in (("sessionstart", None),
+                                 ("userpromptsubmit", '{"prompt": "hi"}')):
+                proc = self._run_hook(event, tmp, stdin)
+                self.assertEqual(proc.returncode, 0, msg=proc.stderr)
+                payload = json.loads(proc.stdout)
+                outer = payload["hookSpecificOutput"]
+                self.assertEqual(outer["hookEventName"].lower(), event)
+                ctx = outer.get("additionalContext") or outer.get("contextForClaude")
+                self.assertIn("fact-graph", ctx)

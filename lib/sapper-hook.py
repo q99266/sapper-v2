@@ -36,9 +36,9 @@ from pathlib import Path
 # import the CLI as a module so we share renderers
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-import fg  # noqa: E402
+import sapper  # noqa: E402
 
-DEFAULT_STORE = fg.DEFAULT_STORE
+DEFAULT_STORE = sapper.DEFAULT_STORE
 
 
 def _date_context() -> str:
@@ -92,10 +92,10 @@ def _find_store_upward(start: Path) -> Path | None:
 
 
 def _frontier_block(store_path: Path) -> str:
-    store = fg.Store(store_path)
+    store = sapper.Store(store_path)
     try:
-        parts: list[str] = [fg.render_status(store)]
-        history = fg.render_history_block(store)
+        parts: list[str] = [sapper.render_status(store)]
+        history = sapper.render_history_block(store)
         if history:
             parts.append("")  # blank line
             parts.append(history)
